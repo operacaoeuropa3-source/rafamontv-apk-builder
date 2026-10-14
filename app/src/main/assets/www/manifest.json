@@ -1,0 +1,10 @@
+{
+  "name": "Rafamon TV - Smart Media & IPTV",
+  "short_name": "Rafamon TV",
+  "description": "Smart TV IPTV Player para TV ao Vivo, Filmes 4K e Séries",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#090d16",
+  "theme_color": "#090d16"
+}

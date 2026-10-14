@@ -1,0 +1,26 @@
+name: Build APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Raw APK using Android SDK
+        run: |
+          BUILD_TOOLS=$(ls -1 $ANDROID_HOME/build-tools | sort -V | tail -n 1)
+          PLATFORM=$(ls -1 $ANDROID_HOME/platforms | sort -V | tail -n 1)
+          BT="$ANDROID_HOME/build-tools/$BUILD_TOOLS"
+          AJ="$ANDROID_HOME/platforms/$PLATFORM/android.jar"
+          mkdir -p build/gen build/obj build/dex
+          "$BT/aapt" package -f -m -J build/gen -M app/src/main/AndroidManifest.xml -S app/src/main/res -I "$AJ"
+          javac -source 1.8 -target 1.8 -bootclasspath "$AJ" -classpath "$AJ" -d build/obj build/gen/com/rafamontv/app/R.java app/src/main/java/com/rafamontv/app/MainActivity.java
+          "$BT/d8" --lib "$AJ" --output build/dex build/obj/com/rafamontv/app/*.class
+          "$BT/aapt" package -f -M app/src/main/AndroidManifest.xml -S app/src/main/res -A app/src/main/assets -I "$AJ" -F build/unsigned.apk
+          (cd build/dex && zip -u ../unsigned.apk classes.dex)
+          "$BT/zipalign" -f 4 build/unsigned.apk build/aligned.apk
+          keytool -genkeypair -v -keystore build/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=RafamonTV,O=Rafamon,C=BR"
+          "$BT/apksigner" sign --ks build/debug.keystore --ks-pass pass:android --key-pass pass:android --out RafamonTV.apk build/aligned.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RafamonTV-apk
+          path: RafamonTV.apk

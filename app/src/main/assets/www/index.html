@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#090d16" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Rafamon TV - Smart Media &amp; IPTV Player</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand-box">
+        <div class="brand-logo">
+          <svg viewBox="0 0 40 40" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="rafaGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#06b6d4"/>
+                <stop offset="55%" stop-color="#2563eb"/>
+                <stop offset="100%" stop-color="#7c3aed"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="5" width="36" height="27" rx="7" fill="url(#rafaGrad)"/>
+            <rect x="4.5" y="7.5" width="31" height="22" rx="5" fill="#070d19" fill-opacity="0.72"/>
+            <path d="M13 12.5H19.5C22.2 12.5 24 14.1 24 16.5C24 18.4 22.8 19.8 20.9 20.3L24.5 25H21.1L17.9 20.6H16V25H13V12.5ZM16 15V18.3H19.2C20.4 18.3 21.1 17.6 21.1 16.6C21.1 15.6 20.4 15 19.2 15H16Z" fill="#38bdf8"/>
+            <polygon points="25.5,14 31.5,18.5 25.5,23" fill="#ffffff"/>
+            <path d="M13 35.5H27" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>RAFAMON <span>TV</span></h1>
+          <span>Smart Cinema &amp; IPTV</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn focusable active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <span>Início</span>
+        </button>
+
+        <button class="nav-btn focusable" data-view="live">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="15" rx="2"/>
+            <polyline points="17 2 12 7 7 2"/>
+          </svg>
+          <span>TV ao Vivo</span>
+          <span id="count-live" class="nav-count">0</span>
+        </button>
+
+        <button class="nav-btn focusable" data-view="movies">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="2.18"/>
+            <line x1="7" y1="2" x2="7" y2="22"/>
+            <line x1="17" y1="2" x2="17" y2="22"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+          </svg>
+          <span>Filmes</span>
+          <span id="count-movies" class="nav-count">0</span>
+        </button>
+
+        <button class="nav-btn focusable" data-view="series">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+          <span>Séries</span>
+          <span id="count-series" class="nav-count">0</span>
+        </button>
+
+        <button class="nav-btn focusable" data-view="favorites">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <span>Favoritos</span>
+          <span id="count-favorites" class="nav-count">0</span>
+        </button>
+
+        <button class="nav-btn focusable" data-view="playlists">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>Minhas Listas</span>
+        </button>
+
+        <button class="nav-btn focusable" data-view="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Configurações</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="remote-hints">
+          <span class="hint-badge"><span class="hint-key">▲▼◀▶</span> Navegar</span>
+          <span class="hint-badge"><span class="hint-key">OK</span> Selecionar</span>
+          <span class="hint-badge"><span class="hint-key">BACK</span> Voltar</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Clean, Proportional Smart TV Top Header -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button id="btn-top-back-home" class="btn-back-home focusable" title="Voltar para o Início">
+          ← Início
+        </button>
+        <div class="top-brand-mini">
+          <svg viewBox="0 0 40 40" width="24" height="24" fill="none">
+            <rect x="2" y="5" width="36" height="27" rx="7" fill="#2563eb"/>
+            <rect x="4.5" y="7.5" width="31" height="22" rx="5" fill="#070d19"/>
+            <path d="M13 12.5H19.5C22.2 12.5 24 14.1 24 16.5C24 18.4 22.8 19.8 20.9 20.3L24.5 25H21.1L17.9 20.6H16V25H13V12.5ZM16 15V18.3H19.2C20.4 18.3 21.1 17.6 21.1 16.6C21.1 15.6 20.4 15 19.2 15H16Z" fill="#38bdf8"/>
+            <polygon points="25.5,14 31.5,18.5 25.5,23" fill="#ffffff"/>
+          </svg>
+          <span class="top-brand-name">RAFAMON TV</span>
+        </div>
+        <h2 id="top-page-title" class="page-title">Início</h2>
+      </div>
+
+      <div class="top-bar-right">
+        <button id="btn-open-tv-search" class="tv-search-trigger focusable" title="Buscar Canais, Filmes ou Séries">
+          <span class="search-trigger-icon">🔍</span>
+          <span id="top-search-label" class="search-trigger-text">Buscar canais, filmes ou séries...</span>
+        </button>
+        <button id="btn-refresh-catalog" class="btn-icon-top focusable" title="Atualizar Catálogo da Lista">
+          🔄
+        </button>
+        <div class="active-playlist-pill">
+          <span class="dot"></span>
+          <span id="active-playlist-name">MULTIVERSETV</span>
+        </div>
+        <div id="top-clock" class="top-clock">20:00</div>
+      </div>
+    </header>
+
+    <!-- Main Stage Views -->
+    <main class="main-stage">
+      <!-- 1. Dashboard View (Continuar Assistindo & Recentes - Filmes e Séries) -->
+      <section id="view-dashboard" class="view-section active">
+        <div class="dashboard-grid">
+          <div class="poster-grid-wrap" style="flex: 1;">
+            <div class="section-header" style="margin-bottom: 12px;">
+              <h2>⏯ Continuar Assistindo &amp; Recentes (Filmes e Séries)</h2>
+            </div>
+            <div id="dash-recent-grid" class="poster-grid dash-large-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Live TV View -->
+      <section id="view-live" class="view-section">
+        <div class="live-layout">
+          <div class="category-panel">
+            <div class="panel-header">Categorias de Canais</div>
+            <div id="live-categories-list" class="scroll-list"></div>
+          </div>
+
+          <div class="channel-list-panel">
+            <div class="panel-header">
+              <span>Canais</span>
+              <span style="font-size:10px;opacity:0.8;">OK = Prévia | 2x OK = Tela Cheia</span>
+            </div>
+            <div id="live-channels-list" class="scroll-list"></div>
+          </div>
+
+          <div class="live-preview-panel">
+            <div class="panel-header">Prévia &amp; Guia EPG</div>
+            <div class="mini-player-box">
+              <video id="mini-video" playsinline></video>
+              <div class="mini-player-overlay">
+                <div id="mini-channel-title" style="font-size:13px;font-weight:700;">Selecione um canal</div>
+              </div>
+            </div>
+            <div class="mini-actions">
+              <button id="btn-mini-fullscreen" class="btn btn-primary focusable" style="flex:1;">
+                ⛶ Tela Cheia
+              </button>
+              <button id="btn-mini-fav" class="btn focusable">
+                ★ Favoritar
+              </button>
+            </div>
+            <div id="mini-epg-list" class="epg-box"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Movies (VOD) View -->
+      <section id="view-movies" class="view-section">
+        <div class="catalog-layout">
+          <div class="category-panel">
+            <div class="panel-header">Categorias de Filmes</div>
+            <div id="vod-categories-list" class="scroll-list"></div>
+          </div>
+          <div class="poster-grid-wrap">
+            <div id="vod-poster-grid" class="poster-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Series View -->
+      <section id="view-series" class="view-section">
+        <div class="catalog-layout">
+          <div class="category-panel">
+            <div class="panel-header">Categorias de Séries</div>
+            <div id="series-categories-list" class="scroll-list"></div>
+          </div>
+          <div class="poster-grid-wrap">
+            <div id="series-poster-grid" class="poster-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Favorites View -->
+      <section id="view-favorites" class="view-section">
+        <div class="catalog-layout">
+          <div class="category-panel">
+            <div class="panel-header">Categorias de Favoritos</div>
+            <div id="fav-categories-list" class="scroll-list"></div>
+          </div>
+          <div class="poster-grid-wrap">
+            <div id="favorites-grid" class="poster-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Playlists / Accounts View -->
+      <section id="view-playlists" class="view-section">
+        <div class="playlists-layout">
+          <div style="display:flex;flex-direction:column;gap:16px;overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <h3 style="font-size:18px;">Listas IPTV Configuradas</h3>
+              <button id="btn-open-add-playlist" class="btn btn-primary focusable">
+                + Adicionar Nova Lista (Xtream / M3U)
+              </button>
+            </div>
+            <div id="playlists-cards-container" class="playlist-cards-list"></div>
+          </div>
+
+          <div class="qr-companion-box">
+            <h3 style="font-size:18px;font-weight:700;">Enviar Lista pelo Celular</h3>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:8px;">
+              Você pode digitar os dados do seu IPTV diretamente na TV clicando em
+              <strong>+ Adicionar Nova Lista</strong>, ou abrir o endereço abaixo no celular na mesma rede Wi-Fi:
+            </p>
+            <div class="qr-frame">
+              <svg viewBox="0 0 100 100" width="140" height="140">
+                <rect x="8" y="8" width="26" height="26" fill="none" stroke="#0f172a" stroke-width="6"/>
+                <rect x="16" y="16" width="10" height="10" fill="#0f172a"/>
+                <rect x="66" y="8" width="26" height="26" fill="none" stroke="#0f172a" stroke-width="6"/>
+                <rect x="74" y="16" width="10" height="10" fill="#0f172a"/>
+                <rect x="8" y="66" width="26" height="26" fill="none" stroke="#0f172a" stroke-width="6"/>
+                <rect x="16" y="74" width="10" height="10" fill="#0f172a"/>
+                <rect x="44" y="12" width="8" height="8" fill="#0f172a"/>
+                <rect x="44" y="28" width="8" height="16" fill="#0f172a"/>
+                <rect x="12" y="44" width="20" height="8" fill="#0f172a"/>
+                <rect x="44" y="52" width="16" height="8" fill="#0f172a"/>
+                <rect x="68" y="44" width="16" height="16" fill="#0f172a"/>
+                <rect x="44" y="72" width="12" height="16" fill="#0f172a"/>
+                <rect x="68" y="72" width="20" height="20" fill="#0f172a"/>
+              </svg>
+            </div>
+            <div
+              id="qr-mobile-url"
+              style="font-size:14px;font-weight:700;color:#38bdf8;background:rgba(56,189,248,0.12);padding:8px 14px;border-radius:8px;"
+            >
+              http://localhost:8765/mobile
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Settings View -->
+      <section id="view-settings" class="view-section">
+        <div class="poster-grid-wrap" style="max-width:680px;">
+          <h3 style="font-size:20px;margin-bottom:18px;">Preferências de Reprodução e Sistema</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="setting-live-format">Formato Preferido de Canais ao Vivo (Xtream Codes)</label>
+              <select id="setting-live-format" class="form-input focusable">
+                <option value="m3u8">HLS Adaptativo (.m3u8) - Recomendado para Smart TVs</option>
+                <option value="ts">MPEG-TS Direto (.ts) - Baixa Latência</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-top:12px;">
+              <label>Gerenciamento de Dados Locais</label>
+              <div style="display:flex;gap:12px;margin-top:6px;">
+                <button id="btn-clear-history" class="btn btn-danger focusable">
+                  Limpar Histórico "Continuar Assistindo"
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Add Playlist (Xtream Codes & M3U) -->
+  <div id="modal-add-playlist" class="modal-backdrop">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h2>Adicionar Lista IPTV</h2>
+        <button id="btn-close-add-playlist" class="btn focusable">✕ Fechar</button>
+      </div>
+
+      <div class="tab-switcher">
+        <button id="tab-btn-xtream" class="btn btn-primary focusable">
+          Dados Xtream Codes (Servidor + Usuário + Senha)
+        </button>
+        <button id="tab-btn-m3u" class="btn focusable">
+          Link M3U / M3U8 Completo
+        </button>
+      </div>
+
+      <!-- Xtream Codes Form -->
+      <div id="form-xtream" class="form-grid">
+        <div class="form-group">
+          <label for="xt-name">Nome da Lista (ex: Meu IPTV)</label>
+          <input id="xt-name" type="text" class="form-input focusable" placeholder="Minha Lista Principal" />
+        </div>
+        <div class="form-group">
+          <label for="xt-server">URL do Servidor (enviada pelo seu provedor)</label>
+          <input id="xt-server" type="text" class="form-input focusable" placeholder="http://servidor-exemplo.com:8080" />
+        </div>
+        <div class="form-group">
+          <label for="xt-user">Usuário (Username)</label>
+          <input id="xt-user" type="text" class="form-input focusable" placeholder="Digite seu usuário" />
+        </div>
+        <div class="form-group">
+          <label for="xt-pass">Senha (Password)</label>
+          <input id="xt-pass" type="password" class="form-input focusable" placeholder="Digite sua senha" />
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+          <button id="btn-save-xtream" class="btn btn-success focusable">
+            ✓ Salvar e Carregar Canais, Filmes e Séries
+          </button>
+        </div>
+      </div>
+
+      <!-- M3U URL Form -->
+      <div id="form-m3u" class="form-grid" style="display:none;">
+        <div class="form-group">
+          <label for="m3u-name">Nome da Lista</label>
+          <input id="m3u-name" type="text" class="form-input focusable" placeholder="Minha Lista M3U" />
+        </div>
+        <div class="form-group">
+          <label for="m3u-url">Link URL M3U / M3U8</label>
+          <input id="m3u-url" type="text" class="form-input focusable" placeholder="http://servidor.com/get.php?username=...&password=...&type=m3u_plus" />
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+          <button id="btn-save-m3u" class="btn btn-success focusable">
+            ✓ Salvar e Importar Lista M3U
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Movie / Series Details -->
+  <div id="modal-media-details" class="modal-backdrop">
+    <div class="modal-window">
+      <div id="media-details-body"></div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Video Player with Cinema HUD (Matching TV Player Controls) -->
+  <div id="fullscreen-player">
+    <video id="fs-video" playsinline crossorigin="anonymous"></video>
+
+    <!-- Custom Subtitle Overlay -->
+    <div id="custom-subtitle-overlay"></div>
+    <input type="file" id="subtitle-file-input" accept=".srt,.vtt" style="display:none;" />
+
+    <!-- Top OSD: Left Advisory Banner + Right Technical Quality/Resolution Box -->
+    <div class="player-osd-top">
+      <div id="osd-advisory-banner" class="player-advisory-banner">
+        Menores de 17 apenas acompanhados por responsável de 21 anos ou mais.
+      </div>
+
+      <div id="osd-tech-box" class="player-tech-box">
+        <div class="tech-row tech-header">
+          <span class="tech-label">Quality:</span>
+          <span id="tech-quality" class="tech-val">4K Ultra HD</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-label">Resolution:</span>
+          <span id="tech-resolution" class="tech-val">3840|2160</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-label">Network:</span>
+          <span id="tech-network" class="tech-val">Original Stream</span>
+        </div>
+        <div id="tech-aspect-label" class="tech-sub">Original Stream</div>
+      </div>
+    </div>
+
+    <!-- Center Circular Pause / Play Indicator -->
+    <div class="player-center-overlay">
+      <button id="btn-center-playpause" class="player-center-circle focusable" title="Play / Pause">
+        <svg id="center-icon-pause" viewBox="0 0 24 24">
+          <rect x="6" y="4" width="4.5" height="16" rx="1"></rect>
+          <rect x="13.5" y="4" width="4.5" height="16" rx="1"></rect>
+        </svg>
+        <svg id="center-icon-play" viewBox="0 0 24 24" style="display:none;">
+          <polygon points="6,4 20,12 6,20"></polygon>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Popover 1: [AD] Audio Tracks & Voice Boost -->
+    <div id="popover-audio" class="player-popover">
+      <h4>Faixas de Áudio (AD)</h4>
+      <div id="audio-tracks-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+      <h4 style="margin-top:8px;">Modo de Áudio &amp; Volume</h4>
+      <button id="btn-audio-boost" class="popover-option focusable">
+        <span>Reforço de Diálogo (Voz Nitidez)</span>
+        <span id="audio-boost-status">Desativado</span>
+      </button>
+      <button id="btn-audio-mute" class="popover-option focusable">
+        <span>Mudo (Mute)</span>
+        <span id="audio-mute-status">Som Ativo</span>
+      </button>
+    </div>
+
+    <!-- Popover 2: [CC] Subtitles & Captions -->
+    <div id="popover-subtitles" class="player-popover">
+      <h4>Legendas (CC)</h4>
+      <div id="subtitle-tracks-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+      <button id="btn-load-external-sub" class="popover-option focusable">
+        <span>+ Carregar Legenda Externa (.SRT / .VTT)</span>
+        <span>Arquivo</span>
+      </button>
+      <h4 style="margin-top:8px;">Tamanho da Legenda</h4>
+      <div style="display:flex;gap:8px;">
+        <button class="popover-option focusable sub-size-btn" data-size="20px" style="flex:1;justify-content:center;">Pequena</button>
+        <button class="popover-option focusable sub-size-btn active" data-size="26px" style="flex:1;justify-content:center;">Média</button>
+        <button class="popover-option focusable sub-size-btn" data-size="34px" style="flex:1;justify-content:center;">Grande</button>
+      </div>
+    </div>
+
+    <!-- Popover 3: [⚙] Player Gear Settings -->
+    <div id="popover-settings" class="player-popover">
+      <h4>Velocidade de Reprodução</h4>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+        <button class="popover-option focusable speed-opt-btn" data-speed="0.75">0.75x</button>
+        <button class="popover-option focusable speed-opt-btn active" data-speed="1">1.0x</button>
+        <button class="popover-option focusable speed-opt-btn" data-speed="1.25">1.25x</button>
+        <button class="popover-option focusable speed-opt-btn" data-speed="1.5">1.5x</button>
+        <button class="popover-option focusable speed-opt-btn" data-speed="2">2.0x</button>
+      </div>
+      <h4 style="margin-top:8px;">Informações na Tela</h4>
+      <button id="btn-toggle-tech-box" class="popover-option focusable active">
+        <span>Card de Resolução (4K / Bitrate)</span>
+        <span id="tech-box-toggle-label">Visível</span>
+      </button>
+      <button id="btn-switch-stream-ext" class="popover-option focusable">
+        <span>Alternar Fluxo (HLS .m3u8 ⇄ MPEG-TS .ts)</span>
+        <span>Trocar</span>
+      </button>
+    </div>
+
+    <!-- Bottom OSD Cinema Bar -->
+    <div class="player-osd-bottom">
+      <div id="osd-title" class="osd-movie-title">CÓDIGO: VINGANÇA [4K] (2026)</div>
+      <div class="osd-timestamp-row">
+        <span id="osd-time-label">0:00:00 / 0:00:00</span>
+        <span id="osd-subtitle" style="font-size:13px;color:#cbd5e1;font-weight:500;">Original Stream</span>
+      </div>
+
+      <!-- Full-Width Interactive Seek Bar -->
+      <div id="osd-progress-wrap" class="progress-bar-wrap focusable" tabindex="0" title="Use ◀ / ▶ para retroceder ou avançar">
+        <div id="osd-progress-fill" class="progress-bar-fill"></div>
+      </div>
+
+      <!-- 8 Iconic Bottom Controls (Exact Match to Photo) -->
+      <div class="osd-controls-row">
+        <!-- 1. Back / Return (↺) -->
+        <button id="btn-osd-back" class="osd-icon-btn focusable" title="Voltar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+        </button>
+
+        <!-- 2. Close / Stop (✖) -->
+        <button id="btn-osd-close" class="osd-icon-btn focusable" title="Fechar Player">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- 3. Restart / Previous Episode / Previous Channel (⏮) -->
+        <button id="btn-osd-ch-prev" class="osd-icon-btn focusable" title="Episódio Anterior / Reiniciar / Canal Anterior">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <rect x="4" y="5" width="3" height="14"></rect>
+            <polygon points="20,5 9,12 20,19"></polygon>
+          </svg>
+        </button>
+
+        <!-- 4. Main Play / Pause (▶) -->
+        <button id="btn-osd-playpause" class="osd-icon-btn play-main-btn focusable" title="Play / Pause">
+          <svg id="bottom-icon-play" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5,3 20,12 5,21"></polygon>
+          </svg>
+          <svg id="bottom-icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+            <rect x="5" y="4" width="5" height="16" rx="1"></rect>
+            <rect x="14" y="4" width="5" height="16" rx="1"></rect>
+          </svg>
+        </button>
+
+        <!-- 5. Next Episode / Next Channel (⏭) -->
+        <button id="btn-osd-ch-next" class="osd-icon-btn focusable" title="Próximo Episódio / Próximo Canal">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="4,5 15,12 4,19"></polygon>
+            <rect x="17" y="5" width="3" height="14"></rect>
+          </svg>
+        </button>
+
+        <!-- 6. Aspect Ratio / Screen Mode (⛶) -->
+        <button id="btn-osd-aspect" class="osd-icon-btn focusable" title="Proporção de Tela (Original / 16:9 / Zoom)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+
+        <!-- 7. Audio Tracks & Description ([AD]) -->
+        <button id="btn-osd-audio" class="osd-icon-btn osd-badge-btn focusable" title="Faixas de Áudio (AD)">
+          AD
+        </button>
+
+        <!-- 8. Subtitles / Closed Captions ([CC]) -->
+        <button id="btn-osd-subtitles" class="osd-icon-btn osd-badge-btn focusable" title="Legendas (CC)">
+          CC
+        </button>
+
+        <!-- 9. Player Settings Gear (⚙) -->
+        <button id="btn-osd-settings" class="osd-icon-btn focusable" title="Configurações do Player">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+
+        <!-- 10. Quick Next Episode Pill Button (Shown on Series) -->
+        <button id="btn-osd-next-ep-pill" class="btn btn-primary focusable" style="display:none;margin-left:auto;padding:8px 18px;font-size:14px;border-radius:999px;">
+          ⏭ Próximo Episódio
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Duplecast-style Mini Startup Loading Card -->
+  <div id="startup-loader-overlay" class="startup-loader-overlay">
+    <div class="startup-loader-card">
+      <div class="startup-loader-brand">
+        <svg viewBox="0 0 40 40" width="44" height="44" fill="none">
+          <rect x="2" y="5" width="36" height="27" rx="7" fill="#2563eb"/>
+          <rect x="4.5" y="7.5" width="31" height="22" rx="5" fill="#070d19"/>
+          <path d="M13 12.5H19.5C22.2 12.5 24 14.1 24 16.5C24 18.4 22.8 19.8 20.9 20.3L24.5 25H21.1L17.9 20.6H16V25H13V12.5ZM16 15V18.3H19.2C20.4 18.3 21.1 17.6 21.1 16.6C21.1 15.6 20.4 15 19.2 15H16Z" fill="#38bdf8"/>
+          <polygon points="25.5,14 31.5,18.5 25.5,23" fill="#ffffff"/>
+          <path d="M13 35.5H27" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <h3>RAFAMON <span>TV</span></h3>
+          <p id="startup-loader-status">Preparando catálogo rápido...</p>
+        </div>
+      </div>
+      <div class="startup-progress-track">
+        <div id="startup-progress-fill" class="startup-progress-fill" style="width: 12%;"></div>
+      </div>
+      <div class="startup-loader-meta">
+        <span id="startup-loader-detail">Verificando cache local da TV...</span>
+        <span id="startup-loader-pct">12%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Smart TV Search Modal with Integrated Remote Virtual Keyboard -->
+  <div id="modal-tv-search" class="modal-backdrop">
+    <div class="modal-card tv-search-modal">
+      <div class="tv-search-header">
+        <div class="tv-search-input-display">
+          <span class="tv-search-icon">🔍</span>
+          <input
+            id="tv-search-text-input"
+            type="text"
+            class="tv-search-real-input focusable"
+            placeholder="Use o teclado na tela ou digite para buscar..."
+            autocomplete="off"
+          />
+        </div>
+        <button id="btn-close-tv-search" class="btn focusable">✕ Fechar</button>
+      </div>
+
+      <div class="tv-search-body">
+        <!-- Left: On-Screen TV Remote Keyboard -->
+        <div class="tv-keyboard-panel">
+          <div id="tv-keyboard-grid" class="tv-keyboard-grid"></div>
+          <div class="tv-keyboard-actions">
+            <button class="tv-key-action focusable" data-key="SPACE">ESPAÇO</button>
+            <button class="tv-key-action focusable" data-key="BACKSPACE">⌫ APAGAR</button>
+            <button class="tv-key-action focusable" data-key="CLEAR">LIMPAR</button>
+          </div>
+        </div>
+
+        <!-- Right: Instant Search Results (Live, Movies, Series) -->
+        <div class="tv-search-results-panel">
+          <div class="tv-search-results-header">
+            <span id="tv-search-results-count">Digite pelo menos 2 letras para buscar em Canais, Filmes e Séries</span>
+          </div>
+          <div id="tv-search-results-grid" class="poster-grid tv-search-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Open-Source Stream Engines + Main App -->
+  <script src="js/hls.min.js"></script>
+  <script src="js/mpegts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
